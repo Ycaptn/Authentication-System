@@ -29,7 +29,10 @@ export const loginController = async(req:Request,res:Response) => {
      if (!validPassword) {
         throw new badRequestError("Invalid credentials")
     }
-    
+
+     if (!user.verified) {
+            throw new badRequestError('Please verify your email')
+     }
     if (!process.env.JWT_SECRET_KEY) throw new notFoundError("JWT_ACCESSKEY_NOTFOUND")
     const { password: _password, ...safedata } = user
     const token = jwt.sign({id:user.id},process.env.JWT_SECRET_KEY)
@@ -48,13 +51,15 @@ export const registerController = async (req:Request,res:Response) => {
         }
     });
     if (existingUser) {
-        throw new badRequestError(
-            existingUser.username === username
-                ? 'Username already exists'
-                : 'Email already exists'
-        );
+            throw new badRequestError(
+                existingUser.username === username
+                    ? 'Username already exists'
+                    : 'Email already exists'
+            );
+
     }
-    
+
+
     const user = await prisma.user.create({
         data:{
             username:username,
@@ -128,7 +133,7 @@ export const verifyPasswordToken = async (req:Request,res:Response) => {
     resetPasswordSchema.parse(req.body)
     const {email,token} = req.body
 
-    const user = await prisma.user.findFirst({
+    let user = await prisma.user.findFirst({
         where:{
             email
         }
@@ -143,7 +148,14 @@ export const verifyPasswordToken = async (req:Request,res:Response) => {
    
     if (!resetToken || resetToken.token !== token) throw new badRequestError("invalid token")
    
-    
+    await prisma.user.update({
+        where:{
+            id: user.id
+        },
+        data:{
+            verified:true
+        }
+    })
     res.status(200).json({
         success: true,
         message: "user verified"

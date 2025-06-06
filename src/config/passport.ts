@@ -34,7 +34,8 @@ export const configPassport = () => {
           user = await prisma.user.create({
             data: {
               googleID: profile.id,
-              email: profile.emails?.[0]?.value || ''
+              email: profile.emails?.[0]?.value || '',
+              verified:true
             }
           });
         }
@@ -46,7 +47,9 @@ export const configPassport = () => {
               id: user.id
             },
             data: {
-              googleID: profile.id
+              googleID: profile.id,
+              verified:true
+
             }
           });
         }

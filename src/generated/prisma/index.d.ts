@@ -1007,6 +1007,7 @@ export namespace Prisma {
     username: string | null
     password: string | null
     googleID: string | null
+    verified: boolean | null
     usertype: $Enums.userType | null
   }
 
@@ -1016,6 +1017,7 @@ export namespace Prisma {
     username: string | null
     password: string | null
     googleID: string | null
+    verified: boolean | null
     usertype: $Enums.userType | null
   }
 
@@ -1025,6 +1027,7 @@ export namespace Prisma {
     username: number
     password: number
     googleID: number
+    verified: number
     usertype: number
     _all: number
   }
@@ -1036,6 +1039,7 @@ export namespace Prisma {
     username?: true
     password?: true
     googleID?: true
+    verified?: true
     usertype?: true
   }
 
@@ -1045,6 +1049,7 @@ export namespace Prisma {
     username?: true
     password?: true
     googleID?: true
+    verified?: true
     usertype?: true
   }
 
@@ -1054,6 +1059,7 @@ export namespace Prisma {
     username?: true
     password?: true
     googleID?: true
+    verified?: true
     usertype?: true
     _all?: true
   }
@@ -1136,6 +1142,7 @@ export namespace Prisma {
     username: string | null
     password: string | null
     googleID: string | null
+    verified: boolean | null
     usertype: $Enums.userType
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
@@ -1162,6 +1169,7 @@ export namespace Prisma {
     username?: boolean
     password?: boolean
     googleID?: boolean
+    verified?: boolean
     usertype?: boolean
     resetTokens?: boolean | User$resetTokensArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1175,10 +1183,11 @@ export namespace Prisma {
     username?: boolean
     password?: boolean
     googleID?: boolean
+    verified?: boolean
     usertype?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "username" | "password" | "googleID" | "usertype", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "username" | "password" | "googleID" | "verified" | "usertype", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     resetTokens?: boolean | User$resetTokensArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1195,6 +1204,7 @@ export namespace Prisma {
       username: string | null
       password: string | null
       googleID: string | null
+      verified: boolean | null
       usertype: $Enums.userType
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -1571,6 +1581,7 @@ export namespace Prisma {
     readonly username: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly googleID: FieldRef<"User", 'String'>
+    readonly verified: FieldRef<"User", 'Boolean'>
     readonly usertype: FieldRef<"User", 'userType'>
   }
     
@@ -2895,6 +2906,7 @@ export namespace Prisma {
     username: 'username',
     password: 'password',
     googleID: 'googleID',
+    verified: 'verified',
     usertype: 'usertype'
   };
 
@@ -2961,6 +2973,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'userType'
    */
   export type EnumuserTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'userType'>
@@ -2986,6 +3005,7 @@ export namespace Prisma {
     username?: StringNullableFilter<"User"> | string | null
     password?: StringNullableFilter<"User"> | string | null
     googleID?: StringNullableFilter<"User"> | string | null
+    verified?: BoolNullableFilter<"User"> | boolean | null
     usertype?: EnumuserTypeFilter<"User"> | $Enums.userType
     resetTokens?: ResetTokenListRelationFilter
   }
@@ -2996,6 +3016,7 @@ export namespace Prisma {
     username?: SortOrderInput | SortOrder
     password?: SortOrderInput | SortOrder
     googleID?: SortOrderInput | SortOrder
+    verified?: SortOrderInput | SortOrder
     usertype?: SortOrder
     resetTokens?: resetTokenOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
@@ -3010,6 +3031,7 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     username?: StringNullableFilter<"User"> | string | null
     password?: StringNullableFilter<"User"> | string | null
+    verified?: BoolNullableFilter<"User"> | boolean | null
     usertype?: EnumuserTypeFilter<"User"> | $Enums.userType
     resetTokens?: ResetTokenListRelationFilter
   }, "id" | "email" | "googleID">
@@ -3020,6 +3042,7 @@ export namespace Prisma {
     username?: SortOrderInput | SortOrder
     password?: SortOrderInput | SortOrder
     googleID?: SortOrderInput | SortOrder
+    verified?: SortOrderInput | SortOrder
     usertype?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -3035,6 +3058,7 @@ export namespace Prisma {
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
     googleID?: StringNullableWithAggregatesFilter<"User"> | string | null
+    verified?: BoolNullableWithAggregatesFilter<"User"> | boolean | null
     usertype?: EnumuserTypeWithAggregatesFilter<"User"> | $Enums.userType
   }
 
@@ -3095,6 +3119,7 @@ export namespace Prisma {
     username?: string | null
     password?: string | null
     googleID?: string | null
+    verified?: boolean | null
     usertype?: $Enums.userType
     resetTokens?: resetTokenCreateNestedManyWithoutUserInput
   }
@@ -3105,6 +3130,7 @@ export namespace Prisma {
     username?: string | null
     password?: string | null
     googleID?: string | null
+    verified?: boolean | null
     usertype?: $Enums.userType
     resetTokens?: resetTokenUncheckedCreateNestedManyWithoutUserInput
   }
@@ -3115,6 +3141,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     googleID?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     usertype?: EnumuserTypeFieldUpdateOperationsInput | $Enums.userType
     resetTokens?: resetTokenUpdateManyWithoutUserNestedInput
   }
@@ -3125,6 +3152,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     googleID?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     usertype?: EnumuserTypeFieldUpdateOperationsInput | $Enums.userType
     resetTokens?: resetTokenUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -3135,6 +3163,7 @@ export namespace Prisma {
     username?: string | null
     password?: string | null
     googleID?: string | null
+    verified?: boolean | null
     usertype?: $Enums.userType
   }
 
@@ -3144,6 +3173,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     googleID?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     usertype?: EnumuserTypeFieldUpdateOperationsInput | $Enums.userType
   }
 
@@ -3153,6 +3183,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     googleID?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     usertype?: EnumuserTypeFieldUpdateOperationsInput | $Enums.userType
   }
 
@@ -3234,6 +3265,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type EnumuserTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.userType | EnumuserTypeFieldRefInput<$PrismaModel>
     in?: $Enums.userType[]
@@ -3268,6 +3304,7 @@ export namespace Prisma {
     username?: SortOrder
     password?: SortOrder
     googleID?: SortOrder
+    verified?: SortOrder
     usertype?: SortOrder
   }
 
@@ -3277,6 +3314,7 @@ export namespace Prisma {
     username?: SortOrder
     password?: SortOrder
     googleID?: SortOrder
+    verified?: SortOrder
     usertype?: SortOrder
   }
 
@@ -3286,6 +3324,7 @@ export namespace Prisma {
     username?: SortOrder
     password?: SortOrder
     googleID?: SortOrder
+    verified?: SortOrder
     usertype?: SortOrder
   }
 
@@ -3323,6 +3362,14 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type EnumuserTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -3387,6 +3434,10 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
   }
 
   export type EnumuserTypeFieldUpdateOperationsInput = {
@@ -3465,6 +3516,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type NestedEnumuserTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.userType | EnumuserTypeFieldRefInput<$PrismaModel>
     in?: $Enums.userType[]
@@ -3528,6 +3584,14 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumuserTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -3594,6 +3658,7 @@ export namespace Prisma {
     username?: string | null
     password?: string | null
     googleID?: string | null
+    verified?: boolean | null
     usertype?: $Enums.userType
   }
 
@@ -3603,6 +3668,7 @@ export namespace Prisma {
     username?: string | null
     password?: string | null
     googleID?: string | null
+    verified?: boolean | null
     usertype?: $Enums.userType
   }
 
@@ -3628,6 +3694,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     googleID?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     usertype?: EnumuserTypeFieldUpdateOperationsInput | $Enums.userType
   }
 
@@ -3637,6 +3704,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     googleID?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: NullableBoolFieldUpdateOperationsInput | boolean | null
     usertype?: EnumuserTypeFieldUpdateOperationsInput | $Enums.userType
   }
 

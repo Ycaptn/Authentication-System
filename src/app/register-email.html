@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification | Secure Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .auth-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .auth-box h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .auth-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .auth-links a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-box">
+                <h2>Verify Your Email</h2>
+                <div id="message" class="message" style="display: none;"></div>
+                
+                <!-- Get Code Form -->
+                <form id="codeForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <button type="submit" id="getCodeBtn">Get Verification Code</button>
+                </form>
+                
+                <!-- Verify Code Form -->
+                <form id="verifyForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="token">Verification Code</label>
+                        <input type="text" id="token" name="token" required>
+                    </div>
+                    <button type="submit" id="verifyBtn">Verify Email</button>
+                </form>
+                
+                <div class="auth-links">
+                    <a href="/login">Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Authentication System. All rights reserved.</p>
+            <p>Security Features: SSL Encryption | Rate Limiting | Password Hashing</p>
+        </div>
+    </footer>
+
+    <script>
+        // Display message to user
+        function showMessage(text, isError = false) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = isError ? 'message error' : 'message success';
+            messageEl.style.display = 'block';
+        }
+
+        // Get verification code
+        document.getElementById("codeForm").addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const getCodeBtn = document.getElementById('getCodeBtn');
+            
+            getCodeBtn.disabled = true;
+            getCodeBtn.textContent = 'Sending...';
+            
+            try {
+                const response = await fetch('/api/auth/get-token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                
+                const data = await response.json();
+
+                
+                if (data.success) {
+                    alert(data.token)
+                    showMessage("Verification code sent to your email");
+                    document.getElementById('codeForm').style.display = 'none';
+                    document.getElementById('verifyForm').style.display = 'block';
+                } else {
+                    showMessage(data.message || "Failed to send verification code", true);
+                }
+            } catch (error) {
+                showMessage("Network error. Please try again.", true);
+            } finally {
+                getCodeBtn.disabled = false;
+                getCodeBtn.textContent = 'Get Verification Code';
+            }
+        });
+
+        // Verify code
+        document.getElementById('verifyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const token = document.getElementById('token').value;
+            const verifyBtn = document.getElementById('verifyBtn');
+            
+            verifyBtn.disabled = true;
+            verifyBtn.textContent = 'Verifying...';
+            
+            try {
+                const response = await fetch('/api/auth/verify-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, token })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage("Email verified successfully!");
+                    localStorage.setItem('resetEmail', email);
+                    setTimeout(() => {
+                        window.location.href = data.redirectUrl || '/login';
+                    }, 1500);
+                } else {
+                    showMessage(data.message || "Invalid verification code", true);
+                }
+            } catch (error) {
+                showMessage("Network error. Please try again.", true);
+            } finally {
+                verifyBtn.disabled = false;
+                verifyBtn.textContent = 'Verify Email';
+            }
+        });
+    </script>
+</body>
+</html>

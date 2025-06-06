@@ -27,6 +27,10 @@ renderRoute.get('/verify-email',(req:Request,res:Response)=>{
     res.sendFile(path.resolve('src/app/verify-email.html'))
 })
 
+renderRoute.get('/register-email',(req:Request,res:Response)=>{
+    res.sendFile(path.resolve('src/app/register-email.html'))
+})
+
 renderRoute.get('/reset-password',(req:Request,res:Response)=>{
     res.sendFile(path.resolve('src/app/reset-password.html'))
 })

@@ -20,6 +20,7 @@ model User {
   username    String?
   password    String?
   googleID    String?      @unique
+  verified    Boolean?     @default(false)
   resetTokens resetToken[]
   usertype    userType     @default(user)
 }
