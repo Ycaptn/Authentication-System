@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Secure Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        nav {
+            background-color: #34495e;
+            padding: 15px 0;
+        }
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 20px;
+        }
+        nav ul li {
+            margin: 0;
+        }
+        nav ul li a, nav ul li {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        nav ul li:hover, nav ul li a:hover {
+            background-color: #3d566e;
+        }
+        .focus {
+            background-color: #51718f;
+        }
+        .dashboard-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            text-align: center;
+        }
+        .user-greeting {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        button {
+            padding: 12px 24px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #c0392b;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: auto;
+        }
+        .last-login {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Check authentication before rendering page
+        const token = localStorage.getItem("token");
+        if(!token) {
+            window.location.href = "/login";
+        }
+    </script>
+
+    <header>
+        <div class="container">
+            <h1>Authentication System</h1>
+            <p>Dashboard</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li class="focus">Dashboard</li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/settings">Settings</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="dashboard-content">
+            <p id="greeting" class="user-greeting">Loading user data...</p>
+            <p>Welcome to your secure dashboard</p>
+            <p id="lastLogin" class="last-login"></p>
+            <button id="logout">Logout</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Authentication System. All rights reserved.</p>
+            <p>Security Features: SSL Encryption | Rate Limiting | Password Hashing</p>
+        </div>
+    </footer>
+
+     <script>
+        // DOM Elements
+        const greetingEl = document.getElementById('greeting');
+        const lastLoginEl = document.getElementById('lastLogin');
+        const logoutBtn = document.getElementById('logout');
+
+        // Fetch user data
+        async function fetchUserData() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/user', {
+                    method: 'POST',
+                    headers: {
+                        'authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const userData = await response.json();
+
+                if (!userData.success) {
+                    throw new Error('Unauthorized');
+                }
+
+              
+                // Update UI with user data
+                greetingEl.textContent = `Welcome, ${userData.message.username || 'User'}!`;
+                
+                // Handle last login
+                const lastLogin = userData.lastLogin || new Date().toLocaleString();
+                lastLoginEl.textContent = `Last login: ${lastLogin}`;
+                
+                // Store current login time
+                localStorage.setItem('lastLogin', new Date().toLocaleString());
+
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                // Clear invalid token and redirect
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            }
+        }
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', async function() {
+            // Show loading state
+            logoutBtn.innerHTML = `<span class="loading"></span> Logging out...`;
+            logoutBtn.disabled = true;
+
+           
+                localStorage.removeItem('token');
+                localStorage.removeItem('username');
+                localStorage.removeItem('lastLogin');
+                localStorage.removeItem('resetEmail');
+                
+                // Redirect to login
+                window.location.href = '/login';
+        });
+
+    
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', fetchUserData);
+    </script>
+</body>
+</html>

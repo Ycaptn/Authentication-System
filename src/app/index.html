@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Secure Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        nav {
+            background-color: #34495e;
+            padding: 15px 0;
+        }
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        nav ul li {
+            margin: 5px 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        nav ul li a:hover, nav ul li a.focus {
+            background-color: #3d566e;
+        }
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .auth-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+        .auth-box h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        .form-group input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        .checkbox-group label {
+            margin: 0;
+            font-weight: normal;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #3498db;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .auth-links {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .auth-links a {
+            color: #3498db;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        .message {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+        }
+        .show-password {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            cursor: pointer;
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+        .social-login {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            margin: 0 5px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .social-btn:hover {
+            background-color: #f0f0f0;
+        }
+        .social-btn img {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+      <script>
+        // Redirect if already logged in
+        const token = localStorage.getItem("token");
+        if(token) {
+            // Verify token validity before redirect
+            fetch('/api/auth/user', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if(response.ok) {
+                    window.location.href = '/dashboard';
+                } else {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('rememberedUsername'); // Clean up
+                }
+            });
+        }
+
+        // Load remembered username if exists
+        document.addEventListener('DOMContentLoaded', function() {
+            const rememberedUsername = localStorage.getItem('rememberedUsername');
+            if(rememberedUsername) {
+                document.getElementById('username').value = rememberedUsername;
+                document.getElementById('remember').checked = true;
+            }
+        });
+    </script>
+    <header>
+        <div class="container">
+            <h1>Authentication System</h1>
+            <p>Secure user management with advanced features</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/register">Register</a></li>
+            <li><a class="focus" href="/login">Login</a></li>
+            <li><a href="/verify-email">Password Reset</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-box">
+                <h2>Welcome Back</h2>
+                <div id="message" class="message"></div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Email or Username</label>
+                        <input type="text" id="username" name="username" required autocomplete="username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                        <span class="show-password" id="togglePassword">Show</span>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    
+                    <button type="submit" id="submitBtn">Login</button>
+                    
+                    <div class="social-login">
+                        <p>Or sign in with:</p>
+                        <div>
+                            <div class="social-btn" onclick="socialLogin('google')">
+                                <img src="https://scontent.fabv2-2.fna.fbcdn.net/v/t39.30808-1/347242835_794226202089359_108955218035349262_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=1&ccb=1-7&_nc_sid=2d3e12&_nc_eui2=AeFE0bhQLZ31TRsgTJn1i7m1BesO7aO6ZzoF6w7to7pnOgBHFl5n2PqX5nf6vgPTGMx6e367Sfxc_GR1pwmZAqKy&_nc_ohc=iKo6Ez506jwQ7kNvwF1rk0T&_nc_oc=AdkmsIi_FUmiim_mU1zdeRd1DUMnoNCjn2QclDq-qRwAkMdqpQGV0Ek6eN6Rt-DHYQI&_nc_zt=24&_nc_ht=scontent.fabv2-2.fna&_nc_gid=AySJqvvFEQoLyGgW0qg7sw&oh=00_AfLjCjy7BEvybyGlRM92bzFAD1QzQ-NP2iBb9NDo0EEnmw&oe=68465043" alt="Google">
+                                Google
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="auth-links">
+                    Don't have an account? <a href="/register">Sign Up</a> | 
+                    <a href="/verify-email">Forgot Password?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Authentication System. All rights reserved.</p>
+            <p>Security Features: SSL Encryption | Rate Limiting | Password Hashing</p>
+        </div>
+    </footer>
+
+  
+</body>
+  <script>
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const messageEl = document.getElementById('message');
+        const submitBtn = document.getElementById('submitBtn');
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        // Password visibility toggle
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? 'Show' : 'Hide';
+        });
+
+        // Form submission
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Logging in...';
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        username, 
+                        password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Store token securely
+                    localStorage.setItem('token', data.access);
+                    
+                    // Handle "Remember Me" functionality - ONLY store username
+                    if(remember) {
+                        localStorage.setItem('rememberedUsername', username);
+                    } else {
+                        localStorage.removeItem('rememberedUsername');
+                    }
+                    
+                    showMessage("Login successful! Redirecting...");
+                    
+                    setTimeout(() => {
+                        window.location.href = data.redirectUrl || '/dashboard';
+                    }, 1000);
+                } else {
+                    showMessage(data.message || "Invalid credentials", true);
+                }
+            } catch (error) {
+                showMessage("Network error. Please try again.", true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
+            }
+        });
+
+        function showMessage(text, isError = false) {
+            messageEl.textContent = text;
+            messageEl.className = isError ? 'message error' : 'message success';
+        }
+
+    async function socialLogin(provider) {
+        window.location.href = `/api/auth/${provider}`;
+ 
+    }
+        
+
+</script>
+
+</html>
